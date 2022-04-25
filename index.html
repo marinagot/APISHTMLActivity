@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="index.css" />
+        <script>
+            if (window.File && window.FileReader && window.FileList) {
+            console.log('Todas las APIs soportadas');
+            } else {
+            alert('La API de FILE no es soportada en este navegador.');
+            }
+
+            function handleFileSelect(e) {
+                var file = e.target.files[0];
+
+                if (!file.type.match('video.*')) {
+                    alert('El fichero proporcionado no es un vídeo, inténtelo de nuevo.');
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    alert('El vídeo se está cargando');
+                    var video = document.getElementById("video");
+                    video.src = e.target.result;
+                    video.hidden = false;
+                    if (video.volume < 0.0) {
+                        video.volume = 0.0;
+                    }
+                    var fileOutput = document.getElementById("fileOutput");
+                    fileOutput.hidden = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function volumeUp(){
+                var volume = document.getElementById('video').volume;
+                volume == 1.0 ? 1.0 : volume += 0.1;
+            }
+
+            function volumeDown(){
+                var volume = document.getElementById('video').volume;
+                volume == 0.0 ? 0.0 : volume -= 0.1;
+            }
+        </script>
+    </head>
+    <body>
+        <h3>Carga de ficheros</h3>
+        <input type="file" name="file" id="videoFile" onchange="handleFileSelect(event)" />
+        <figure>
+            <video id="video" class="thumb" mute="" hidden="true"></video>
+        </figure>
+        <div id="fileOutput" hidden="true">
+            <button onclick="document.getElementById('video').play();">Reproducir</button>
+            <button onclick="document.getElementById('video').pause();">Pausa</button>
+            <button onclick="volumeUp()">Subir volumen</button>
+            <button onclick="volumeDown()">Bajar volumen</button>
+        </div>
+    </body>
+</html>
